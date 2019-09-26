@@ -22,6 +22,10 @@ def pytest_addoption(parser):
 def pytest_configure(config):
     """Define kube_required pytest mark."""
     config.addinivalue_line("markers", "kube_required: mark test as requiring kubernetes")
+    config.addinivalue_line("markers", "attachwithdata: mark test as attach benchmarks with data")
+    config.addinivalue_line("markers", "attach: mark test as attach benchmarks without data")
+    config.addinivalue_line("markers", "provisionandattach: mark test as provision and attach benchmarks without data")
+    config.addinivalue_line("markers", "pedantic: pedantic testing")
 
 def pytest_collection_modifyitems(config, items):
     """Only run kube_required tests when --run-kube-tests is used."""
@@ -44,7 +48,7 @@ def load_kubeconfig():
     kubernetes.config.load_kube_config()
 
 
-@pytest.fixture(params=["csi-cephfs", "csi-rbd", "gp2"])
+@pytest.fixture(params=["openshift-storage-ceph-rbd", "gp2"])
 def storageclass_iterator(request):
     """Allow a test to iterate across a number of storage classes."""
     return request.param
